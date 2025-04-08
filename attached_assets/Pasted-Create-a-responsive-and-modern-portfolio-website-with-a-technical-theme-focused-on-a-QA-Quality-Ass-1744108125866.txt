@@ -1,0 +1,75 @@
+Create a responsive and modern portfolio website with a technical theme focused on a QA (Quality Assurance) Engineer career. The design should reflect a professional and analytical vibe. It should include the following sections and features:
+
+1. Hero Section:
+Name, Title (e.g., "QA Engineer | Software Tester | Automation Specialist")
+
+A short impactful tagline (e.g., "Delivering Quality Through Code & Precision")
+
+A background with subtle animation (optional) or QA-related icons
+
+2. About Me:
+Professional bio
+
+Profile picture placeholder
+
+A section to highlight years of experience, certifications, key strengths
+
+3. Skills & Tools (Infographic Style):
+Display programming languages (Java, Python, JavaScript, etc.)
+
+Tools used: Selenium, Postman, JIRA, TestRail, Cypress, Jenkins, Git, etc.
+
+Display as icons with labels or a chart/infographic layout
+
+4. Testing Processes:
+Visual representation (timeline or diagram) of QA processes:
+
+Requirement Analysis → Test Planning → Test Case Design → Test Execution → Defect Logging → Reporting → Regression/Retesting → Delivery
+
+Separate tabs or cards for:
+
+Manual Testing
+
+Automation Testing
+
+API Testing
+
+Performance Testing
+
+5. Projects/Case Studies:
+Sections to showcase QA projects:
+
+Project Title, Tech Stack, Testing Type
+
+Summary of QA activities and outcomes
+
+Screenshots or reports (placeholders)
+
+6. Certifications & Achievements:
+QA certifications (ISTQB, Agile Tester, etc.)
+
+Icons/logos of institutions
+
+7. Contact Section:
+Contact form
+
+Social links: LinkedIn, GitHub, Email
+
+8. Dark/Light Theme Toggle:
+Button with sun/moon icons to switch themes
+
+9. Optional Features:
+Chatbot-style QA glossary or FAQs
+
+Downloadable CV button
+
+Carousel or slider for testimonials or quotes
+
+Technical Requirements:
+HTML, CSS (with Tailwind or Bootstrap), JavaScript (vanilla or framework)
+
+Responsive design for mobile and desktop
+
+Code structured for clarity (components if using JS frameworks)
+
+Minimal yet modern UI with an emphasis on QA professionalism
