@@ -19,31 +19,23 @@ export default function SkillsSection() {
             className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
           >
             <h3 className="text-xl font-semibold mb-6 flex items-center">
               <i className="ri-code-line text-primary mr-2"></i>
               Programming Languages
             </h3>
-            
-            <div className="space-y-4">
+
+            <div className="space-y-2">
               {programmingSkills.map((skill, index) => (
                 <div key={index}>
-                  <div className="flex justify-between mb-1">
-                    <span>{skill.name}</span>
-                    <span>{skill.percentage}%</span>
-                  </div>
-                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-primary rounded-full"
-                      style={{ width: `${skill.percentage}%` }}
-                    ></div>
-                  </div>
+                  <span>{skill.name}</span>
                 </div>
               ))}
             </div>
           </motion.div>
+
           
           {/* Testing Expertise */}
           <motion.div 
@@ -54,23 +46,23 @@ export default function SkillsSection() {
             viewport={{ once: true }}
           >
             <h3 className="text-xl font-semibold mb-6 flex items-center">
-              <i className="ri-test-tube-line text-primary mr-2"></i>
+              {/* <i className="ri-test-tube-line text-primary mr-2"></i> */}
               Testing Expertise
             </h3>
             
-            <div className="space-y-4">
+            <div className="space-y-2">
               {testingExpertise.map((skill, index) => (
                 <div key={index}>
-                  <div className="flex justify-between mb-1">
+                  {/* <div className="flex justify-between mb-1"> */}
                     <span>{skill.name}</span>
-                    <span>{skill.percentage}%</span>
-                  </div>
-                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    {/* <span>{skill.percentage}%</span> */}
+                  {/* </div> */}
+                  {/* <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-green-500 rounded-full"
                       style={{ width: `${skill.percentage}%` }}
                     ></div>
-                  </div>
+                  </div> */}
                 </div>
               ))}
             </div>

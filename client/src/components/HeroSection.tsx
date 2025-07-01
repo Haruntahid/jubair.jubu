@@ -44,19 +44,19 @@ export default function HeroSection() {
               <div className="relative bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-blue-50 dark:bg-gray-700 p-4 rounded-lg text-center">
-                    <div className="text-3xl font-bold text-primary mb-1">7+</div>
+                    <div className="text-3xl font-bold text-primary mb-1">2+</div>
                     <div className="text-sm text-gray-600 dark:text-gray-300">Years Experience</div>
                   </div>
                   <div className="bg-blue-50 dark:bg-gray-700 p-4 rounded-lg text-center">
-                    <div className="text-3xl font-bold text-primary mb-1">300+</div>
+                    <div className="text-3xl font-bold text-primary mb-1">5k+</div>
                     <div className="text-sm text-gray-600 dark:text-gray-300">Bugs Found</div>
                   </div>
                   <div className="bg-blue-50 dark:bg-gray-700 p-4 rounded-lg text-center">
-                    <div className="text-3xl font-bold text-primary mb-1">50+</div>
+                    <div className="text-3xl font-bold text-primary mb-1">10+</div>
                     <div className="text-sm text-gray-600 dark:text-gray-300">Projects Tested</div>
                   </div>
                   <div className="bg-blue-50 dark:bg-gray-700 p-4 rounded-lg text-center">
-                    <div className="text-3xl font-bold text-primary mb-1">15+</div>
+                    <div className="text-3xl font-bold text-primary mb-1">5+</div>
                     <div className="text-sm text-gray-600 dark:text-gray-300">Testing Tools</div>
                   </div>
                 </div>
@@ -68,8 +68,8 @@ export default function HeroSection() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-medium">Alex Morgan</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">ISTQB Certified QA Professional</p>
+                    <h3 className="font-medium">Jubair Rahman</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400"> QA Professional</p>
                     <div className="flex mt-2 space-x-2">
                       <a href="#" className="text-gray-500 hover:text-primary">
                         <i className="ri-linkedin-fill"></i>
