@@ -237,12 +237,58 @@ export const projects = [
 // Blog Posts (GitHub Gists)
 export const blogPosts = [
   {
-    title: "GitHub Gists Collection",
-    description: "A collection of useful code snippets, testing utilities, and QA resources shared on GitHub Gists.",
-    url: "https://gist.github.com/JubairRahman",
-    date: "2024",
-    category: "Code Snippets",
-    icon: "ri-github-fill",
+    title: "Manual vs Automation Testing Debate",
+    description: "Achieving synergy through the vital role of both manual and automation testing in quality assurance. Explores the balance between speed and depth.",
+    url: "https://gist.github.com/JubairRahman/7a436d6a351c495877476787c0e08688",
+    date: "Sep 2023",
+    category: "QA Strategy",
+    icon: "ri-scales-line",
+  },
+  {
+    title: "Managing and Evaluating AI Projects",
+    description: "Detailed course summary from Atingi.org covering model evaluation, ML teams, best practices, and strategic planning for AI projects.",
+    url: "https://gist.github.com/JubairRahman/51658fe9cc30fe01395624382321e1d9",
+    date: "Aug 2025",
+    category: "AI & ML",
+    icon: "ri-robot-line",
+  },
+  {
+    title: "QA in Crisis Mode: Final 48 Hours",
+    description: "Real-world QA strategy guide for handling high-pressure releases with tight deadlines. Includes practical tips and a health tech project case study.",
+    url: "https://gist.github.com/JubairRahman/5e1573ed7bc8383a1bc4c9763a18c6a7",
+    date: "May 2025",
+    category: "Crisis Management",
+    icon: "ri-alarm-warning-line",
+  },
+  {
+    title: "Importance of Documentation in QA",
+    description: "Why documentation is crucial for QA: ensuring test coverage, facilitating knowledge sharing, and supporting compliance requirements.",
+    url: "https://gist.github.com/JubairRahman/1c93414526ee105124c7a90423390b45",
+    date: "Feb 2025",
+    category: "Best Practices",
+    icon: "ri-file-text-line",
+  },
+];
+
+// Experience
+export const experience = [
+  {
+    title: "Software Engineer, QA",
+    company: "CMED Health Ltd.",
+    duration: "Oct 2022 – Present",
+    location: "Dhaka, Bangladesh",
+    description: "CMED Health is a promising Health-Tech startup actively involved in realizing sustainable development goals through digital health inclusion.",
+    responsibilities: [
+      "Collaborate closely with a team of 10 QA professionals for software testing, issue tracking, and project coordination",
+      "Estimate, prioritize, plan & coordinate project & testing activities",
+      "Review designs and technical specifications and translate them into test cases to maximize test coverage",
+      "Work with software development & UI/UX team in an agile squad-based environment to thoroughly test new features",
+      "Plan, prepare & execute Smoke, Sanity, Regression, Performance & API test cases",
+      "Manage all IT-related software including Redmine management, Fingerprint access control, and Mail server configuration"
+    ],
+    icon: "ri-hospital-line",
+    bgColor: "bg-blue-100 dark:bg-blue-900",
+    iconColor: "text-blue-600 dark:text-blue-400",
   },
 ];
 

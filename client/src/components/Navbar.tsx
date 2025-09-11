@@ -36,6 +36,8 @@ export default function Navbar() {
             <a href="#skills" className="hover:text-primary dark:hover:text-primary font-medium">Skills</a>
             <a href="#process" className="hover:text-primary dark:hover:text-primary font-medium">Process</a>
             <a href="#projects" className="hover:text-primary dark:hover:text-primary font-medium">Projects</a>
+            <a href="#blog" className="hover:text-primary dark:hover:text-primary font-medium">Blog</a>
+            <a href="#experience" className="hover:text-primary dark:hover:text-primary font-medium">Experience</a>
             <a href="#certifications" className="hover:text-primary dark:hover:text-primary font-medium">Certifications</a>
             <a href="#contact" className="hover:text-primary dark:hover:text-primary font-medium">Contact</a>
             
@@ -76,6 +78,8 @@ export default function Navbar() {
           <a href="#skills" onClick={handleNavLinkClick} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700">Skills</a>
           <a href="#process" onClick={handleNavLinkClick} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700">Process</a>
           <a href="#projects" onClick={handleNavLinkClick} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700">Projects</a>
+          <a href="#blog" onClick={handleNavLinkClick} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700">Blog</a>
+          <a href="#experience" onClick={handleNavLinkClick} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700">Experience</a>
           <a href="#certifications" onClick={handleNavLinkClick} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700">Certifications</a>
           <a href="#contact" onClick={handleNavLinkClick} className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700">Contact</a>
         </div>
