@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import profileImage from "@assets/L_In_1757586366832.jpg";
 
 export default function HeroSection() {
   return (
@@ -12,7 +13,7 @@ export default function HeroSection() {
             transition={{ duration: 0.5 }}
           >
             <div className="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-primary dark:text-blue-300 font-medium text-sm">
-              <span>QA Engineer | Software Tester | Automation Specialist</span>
+              <span>QA Engineer | Software Tester | Project Coordinator</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
               <span className="block">Delivering Quality</span>
@@ -52,7 +53,7 @@ export default function HeroSection() {
                     <div className="text-sm text-gray-600 dark:text-gray-300">Bugs Found</div>
                   </div>
                   <div className="bg-blue-50 dark:bg-gray-700 p-4 rounded-lg text-center">
-                    <div className="text-3xl font-bold text-primary mb-1">10+</div>
+                    <div className="text-3xl font-bold text-primary mb-1">8+</div>
                     <div className="text-sm text-gray-600 dark:text-gray-300">Projects Tested</div>
                   </div>
                   <div className="bg-blue-50 dark:bg-gray-700 p-4 rounded-lg text-center">
@@ -63,21 +64,21 @@ export default function HeroSection() {
                 
                 <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <div className="flex-shrink-0">
-                    <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-gray-400">
-                      <i className="ri-user-line text-3xl"></i>
+                    <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden">
+                      <img src={profileImage} alt="Jubair Rahman" className="w-full h-full object-cover" />
                     </div>
                   </div>
                   <div>
                     <h3 className="font-medium">Jubair Rahman</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400"> QA Professional</p>
                     <div className="flex mt-2 space-x-2">
-                      <a href="#" className="text-gray-500 hover:text-primary">
+                      <a href="https://www.linkedin.com/in/thejubairahman" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-primary">
                         <i className="ri-linkedin-fill"></i>
                       </a>
-                      <a href="#" className="text-gray-500 hover:text-primary">
+                      <a href="https://github.com/JubairRahman" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-primary">
                         <i className="ri-github-fill"></i>
                       </a>
-                      <a href="#" className="text-gray-500 hover:text-primary">
+                      <a href="mailto:jubairrahman64@gmail.com" className="text-gray-500 hover:text-primary">
                         <i className="ri-mail-line"></i>
                       </a>
                     </div>

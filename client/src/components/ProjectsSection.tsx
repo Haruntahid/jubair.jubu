@@ -47,7 +47,7 @@ export default function ProjectsSection() {
                   {project.description}
                 </p>
                 <div className="border-t pt-4 dark:border-gray-700">
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between items-center text-sm mb-3">
                     <span className="flex items-center text-gray-500 dark:text-gray-400">
                       <i className={`${project.metricIcon} mr-1`}></i> {project.metric}
                     </span>
@@ -55,6 +55,18 @@ export default function ProjectsSection() {
                       <i className="ri-time-line mr-1"></i> {project.duration}
                     </span>
                   </div>
+                  {project.githubUrl && (
+                    <a 
+                      href={project.githubUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center w-full px-4 py-2 bg-primary hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors"
+                      data-testid={`link-github-${project.title.toLowerCase().replace(/\s+/g, '-')}`}
+                    >
+                      <i className="ri-github-fill mr-2"></i>
+                      View on GitHub
+                    </a>
+                  )}
                 </div>
               </div>
             </motion.div>

@@ -66,7 +66,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400">Email</h4>
-                    <a href="mailto:alexmorgan@example.com" className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary">alexmorgan@example.com</a>
+                    <a href="mailto:jubairrahman64@gmail.com" className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary" data-testid="link-email-main">jubairrahman64@gmail.com</a>
                   </div>
                 </div>
                 
@@ -76,7 +76,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400">Phone</h4>
-                    <a href="tel:+11234567890" className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary">+1 (123) 456-7890</a>
+                    <a href="tel:+8801645763353" className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary" data-testid="link-phone-main">+880 - 164 576 3353</a>
                   </div>
                 </div>
                 
@@ -86,7 +86,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400">Location</h4>
-                    <p className="text-gray-800 dark:text-gray-200">San Francisco, California</p>
+                    <p className="text-gray-800 dark:text-gray-200">Dhaka, Bangladesh</p>
                   </div>
                 </div>
               </div>
@@ -94,17 +94,14 @@ export default function ContactSection() {
               <div className="mt-8">
                 <h4 className="font-medium mb-4">Connect with me</h4>
                 <div className="flex space-x-4">
-                  <a href="#" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors">
+                  <a href="https://www.linkedin.com/in/thejubairahman" target="_blank" rel="noopener noreferrer" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors" data-testid="link-linkedin">
                     <i className="ri-linkedin-fill"></i>
                   </a>
-                  <a href="#" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors">
+                  <a href="https://github.com/JubairRahman" target="_blank" rel="noopener noreferrer" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors" data-testid="link-github">
                     <i className="ri-github-fill"></i>
                   </a>
-                  <a href="#" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors">
-                    <i className="ri-twitter-fill"></i>
-                  </a>
-                  <a href="#" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors">
-                    <i className="ri-medium-fill"></i>
+                  <a href="mailto:jubairrahman64@gmail.com" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors" data-testid="link-email">
+                    <i className="ri-mail-line"></i>
                   </a>
                 </div>
               </div>

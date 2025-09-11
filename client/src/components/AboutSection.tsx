@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import profileImage from "@assets/L_In_1757586366832.jpg";
 
 export default function AboutSection() {
   return (
@@ -20,7 +21,7 @@ export default function AboutSection() {
             <div className="space-y-6">
               <h3 className="text-2xl font-semibold text-primary">Hi, I'm Jubair</h3>
               <p className="text-gray-600 dark:text-gray-300">
-                I'm a dedicated QA Engineer with a passion for ensuring software quality and reliability. With over 2 years of experience in the field, I specialize in both manual and automated testing strategies.
+                I'm a dedicated QA Engineer with a passion for ensuring software quality and reliability. With over 2+ years of experience in the field, I specialize in both manual and automated testing strategies.
               </p>
               <p className="text-gray-600 dark:text-gray-300">
                 My approach combines analytical thinking with technical expertise to identify issues before they reach production. I believe that quality assurance is not just about finding bugs, but about improving the entire development process.
@@ -52,7 +53,7 @@ export default function AboutSection() {
                     <i className="ri-graduation-cap-line text-primary mr-2"></i>
                     <span className="font-medium">Degree</span>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400">B.S. Computer Science</p>
+                  <p className="text-gray-600 dark:text-gray-400">B.Sc Computer Science</p>
                 </div>
               </div>
             </div>
@@ -66,8 +67,8 @@ export default function AboutSection() {
             viewport={{ once: true }}
           >
             <div className="relative">
-              <div className="w-64 h-64 md:w-80 md:h-80 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden flex items-center justify-center shadow-lg">
-                <i className="ri-user-6-line text-8xl text-gray-400"></i>
+              <div className="w-64 h-64 md:w-80 md:h-80 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden shadow-lg">
+                <img src={profileImage} alt="Jubair Rahman" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -bottom-5 -right-5 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700">
                 <div className="text-xl font-bold text-primary">4.5<span className="text-sm text-gray-500">/5.0</span></div>
