@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { apiRequest } from "@/lib/queryClient";
@@ -14,22 +14,45 @@ type FormData = {
 export default function ContactSection() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [terminalText, setTerminalText] = useState("");
+  const [currentCommand, setCurrentCommand] = useState(0);
   
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
+  
+  const terminalCommands = [
+    "$ whoami",
+    "jubair-rahman",
+    "$ cat contact_info.txt",
+    "Loading contact information...",
+    "$ ./establish_connection.sh"
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (currentCommand < terminalCommands.length) {
+        setTerminalText(prev => prev + terminalCommands[currentCommand] + "\n");
+        setCurrentCommand(prev => prev + 1);
+      } else {
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [currentCommand]);
   
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
       await apiRequest('POST', '/api/contact', data);
       toast({
-        title: "Message Sent",
-        description: "Thanks for reaching out! I'll get back to you soon.",
+        title: "✓ Command Executed Successfully",
+        description: "Message transmission completed. Response incoming...",
       });
       reset();
     } catch (error) {
       toast({
-        title: "Error",
-        description: "There was an error sending your message. Please try again.",
+        title: "✗ Command Failed",
+        description: "Network error. Please retry command.",
         variant: "destructive",
       });
     } finally {
@@ -38,164 +61,258 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-20 px-4 bg-gray-50 dark:bg-gray-900">
+    <section id="contact" className="py-20 px-4 bg-black text-green-400">
       <div className="max-w-7xl mx-auto">
+        {/* Terminal Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">Get In Touch</h2>
-          <div className="w-16 h-1 bg-primary mx-auto rounded-full"></div>
-          <p className="text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
-            Have a project in mind or want to discuss quality assurance? Let's connect!
+          <div className="font-mono text-2xl mb-4">
+            <span className="text-green-400">[jubair@qa-portfolio]</span>
+            <span className="text-white">:~$ </span>
+            <span className="text-green-300">./contact</span>
+          </div>
+          <div className="w-16 h-1 bg-green-400 mx-auto"></div>
+          <p className="text-green-300 font-mono mt-4 max-w-2xl mx-auto">
+            &gt; Initiating secure communication channel...
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Terminal Info Panel */}
           <motion.div 
-            className="lg:col-span-2 space-y-6"
+            className="space-y-6"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
-              <h3 className="text-xl font-semibold mb-6">Contact Information</h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-3 mr-4">
-                    <i className="ri-mail-line text-primary"></i>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400">Email</h4>
-                    <a href="mailto:jubairrahman64@gmail.com" className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary" data-testid="link-email-main">jubairrahman64@gmail.com</a>
-                  </div>
+            {/* Terminal Window */}
+            <div className="bg-gray-900 border border-green-400 rounded-lg overflow-hidden shadow-lg shadow-green-400/20">
+              {/* Terminal Header */}
+              <div className="bg-gray-800 px-4 py-2 flex items-center border-b border-green-400">
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 </div>
-                
-                <div className="flex items-start">
-                  <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-3 mr-4">
-                    <i className="ri-phone-line text-primary"></i>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400">Phone</h4>
-                    <a href="tel:+8801645763353" className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary" data-testid="link-phone-main">+880 - 164 576 3353</a>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="bg-blue-100 dark:bg-blue-900 rounded-full p-3 mr-4">
-                    <i className="ri-map-pin-line text-primary"></i>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400">Location</h4>
-                    <p className="text-gray-800 dark:text-gray-200">Dhaka, Bangladesh</p>
-                  </div>
+                <div className="flex-1 text-center text-green-400 font-mono text-sm">
+                  terminal - contact_session.sh
                 </div>
               </div>
               
-              <div className="mt-8">
-                <h4 className="font-medium mb-4">Connect with me</h4>
-                <div className="flex space-x-4">
-                  <a href="https://www.linkedin.com/in/thejubairahman" target="_blank" rel="noopener noreferrer" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors" data-testid="link-linkedin">
-                    <i className="ri-linkedin-fill"></i>
+              {/* Terminal Content */}
+              <div className="p-4 font-mono text-sm min-h-[300px]">
+                <div className="text-green-400 whitespace-pre-line">
+                  {terminalText}
+                </div>
+                <div className="flex items-center">
+                  <span className="text-green-400">$ </span>
+                  <div className="w-2 h-4 bg-green-400 ml-1 animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Info as Terminal Output */}
+            <div className="bg-gray-900 border border-green-400 rounded-lg p-6 font-mono">
+              <div className="text-green-400 mb-4">
+                <span className="text-yellow-400">&#123;</span> contact_info <span className="text-yellow-400">&#125;</span>
+              </div>
+              
+              <div className="space-y-3 text-sm">
+                <div className="flex">
+                  <span className="text-blue-400 min-w-[80px]">email:</span>
+                  <a href="mailto:jubairrahman64@gmail.com" 
+                     className="text-green-300 hover:text-green-100 hover:underline" 
+                     data-testid="link-email-main">
+                    "jubairrahman64@gmail.com"
                   </a>
-                  <a href="https://github.com/JubairRahman" target="_blank" rel="noopener noreferrer" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors" data-testid="link-github">
-                    <i className="ri-github-fill"></i>
+                </div>
+                
+                <div className="flex">
+                  <span className="text-blue-400 min-w-[80px]">phone:</span>
+                  <a href="tel:+8801645763353" 
+                     className="text-green-300 hover:text-green-100 hover:underline" 
+                     data-testid="link-phone-main">
+                    "+880-164-576-3353"
                   </a>
-                  <a href="mailto:jubairrahman64@gmail.com" className="bg-gray-100 dark:bg-gray-700 hover:bg-primary hover:text-white dark:hover:bg-primary p-3 rounded-full transition-colors" data-testid="link-email">
-                    <i className="ri-mail-line"></i>
+                </div>
+                
+                <div className="flex">
+                  <span className="text-blue-400 min-w-[80px]">location:</span>
+                  <span className="text-green-300">"Dhaka, Bangladesh"</span>
+                </div>
+                
+                <div className="flex">
+                  <span className="text-blue-400 min-w-[80px]">status:</span>
+                  <span className="text-green-300">"available"</span>
+                </div>
+              </div>
+              
+              {/* Social Links as Commands */}
+              <div className="mt-6 pt-4 border-t border-green-400">
+                <div className="text-green-400 mb-3">connection_links:</div>
+                <div className="flex flex-wrap gap-2">
+                  <a href="https://www.linkedin.com/in/thejubairahman" 
+                     target="_blank" 
+                     rel="noopener noreferrer" 
+                     className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors" 
+                     data-testid="link-linkedin">
+                    ./linkedin.sh
+                  </a>
+                  <a href="https://github.com/JubairRahman" 
+                     target="_blank" 
+                     rel="noopener noreferrer" 
+                     className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors" 
+                     data-testid="link-github">
+                    ./github.sh
+                  </a>
+                  <a href="mailto:jubairrahman64@gmail.com" 
+                     className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors" 
+                     data-testid="link-email">
+                    ./send_mail.sh
                   </a>
                 </div>
               </div>
             </div>
           </motion.div>
           
+          {/* Terminal Form */}
           <motion.div 
-            className="lg:col-span-3"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
-              <h3 className="text-xl font-semibold mb-6">Send a Message</h3>
+            <div className="bg-gray-900 border border-green-400 rounded-lg overflow-hidden shadow-lg shadow-green-400/20">
+              {/* Form Header */}
+              <div className="bg-gray-800 px-4 py-2 flex items-center border-b border-green-400">
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+                <div className="flex-1 text-center text-green-400 font-mono text-sm">
+                  message_composer.exe
+                </div>
+              </div>
               
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="p-6">
+                <div className="text-green-400 font-mono mb-6">
+                  <span className="text-yellow-400">#</span> Initialize message transmission
+                </div>
+                
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                  {/* Name Input */}
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Name</label>
+                    <label className="block text-green-400 font-mono text-sm mb-2">
+                      <span className="text-blue-400">$</span> sender_name:
+                    </label>
                     <input 
                       type="text" 
-                      id="name"
-                      {...register("name", { required: "Name is required" })}
-                      placeholder="John Doe" 
-                      className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white ${errors.name ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"}`}
+                      {...register("name", { required: "Name parameter required" })}
+                      placeholder="Enter your name..."
+                      className="w-full bg-black border border-green-400 text-green-300 font-mono px-3 py-2 focus:outline-none focus:border-green-200 focus:shadow-sm focus:shadow-green-400/50 placeholder-green-600"
+                      data-testid="input-name"
                     />
-                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+                    {errors.name && (
+                      <p className="text-red-400 font-mono text-xs mt-1">
+                        <span className="text-red-600">✗</span> {errors.name.message}
+                      </p>
+                    )}
                   </div>
                   
+                  {/* Email Input */}
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Email</label>
+                    <label className="block text-green-400 font-mono text-sm mb-2">
+                      <span className="text-blue-400">$</span> sender_email:
+                    </label>
                     <input 
                       type="email" 
-                      id="email"
                       {...register("email", { 
-                        required: "Email is required",
+                        required: "Email parameter required",
                         pattern: {
                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: "Invalid email address"
+                          message: "Invalid email format"
                         }
                       })}
-                      placeholder="john@example.com" 
-                      className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white ${errors.email ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"}`}
+                      placeholder="your.email@domain.com"
+                      className="w-full bg-black border border-green-400 text-green-300 font-mono px-3 py-2 focus:outline-none focus:border-green-200 focus:shadow-sm focus:shadow-green-400/50 placeholder-green-600"
+                      data-testid="input-email"
                     />
-                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+                    {errors.email && (
+                      <p className="text-red-400 font-mono text-xs mt-1">
+                        <span className="text-red-600">✗</span> {errors.email.message}
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Subject Input */}
+                  <div>
+                    <label className="block text-green-400 font-mono text-sm mb-2">
+                      <span className="text-blue-400">$</span> message_subject:
+                    </label>
+                    <input 
+                      type="text" 
+                      {...register("subject", { required: "Subject parameter required" })}
+                      placeholder="Brief message summary..."
+                      className="w-full bg-black border border-green-400 text-green-300 font-mono px-3 py-2 focus:outline-none focus:border-green-200 focus:shadow-sm focus:shadow-green-400/50 placeholder-green-600"
+                      data-testid="input-subject"
+                    />
+                    {errors.subject && (
+                      <p className="text-red-400 font-mono text-xs mt-1">
+                        <span className="text-red-600">✗</span> {errors.subject.message}
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Message Input */}
+                  <div>
+                    <label className="block text-green-400 font-mono text-sm mb-2">
+                      <span className="text-blue-400">$</span> message_body:
+                    </label>
+                    <textarea 
+                      {...register("message", { required: "Message body required" })}
+                      rows={5}
+                      placeholder="Type your message here..."
+                      className="w-full bg-black border border-green-400 text-green-300 font-mono px-3 py-2 focus:outline-none focus:border-green-200 focus:shadow-sm focus:shadow-green-400/50 placeholder-green-600 resize-none"
+                      data-testid="input-message"
+                    ></textarea>
+                    {errors.message && (
+                      <p className="text-red-400 font-mono text-xs mt-1">
+                        <span className="text-red-600">✗</span> {errors.message.message}
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Submit Button */}
+                  <button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="w-full bg-green-900 hover:bg-green-800 border border-green-400 text-green-100 font-mono py-3 px-4 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    data-testid="button-submit"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="animate-spin mr-2">⟳</span>
+                        Transmitting...
+                      </>
+                    ) : (
+                      <>
+                        <span className="mr-2">$</span>
+                        ./send_message.sh --execute
+                      </>
+                    )}
+                  </button>
+                </form>
+                
+                <div className="mt-4 pt-4 border-t border-green-400">
+                  <div className="text-green-600 font-mono text-xs">
+                    <span className="text-yellow-400">#</span> Secure transmission protocol enabled
+                  </div>
+                  <div className="text-green-600 font-mono text-xs">
+                    <span className="text-yellow-400">#</span> Response time: &lt; 24 hours
                   </div>
                 </div>
-                
-                <div className="mb-6">
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subject</label>
-                  <input 
-                    type="text" 
-                    id="subject"
-                    {...register("subject", { required: "Subject is required" })}
-                    placeholder="How can I help you?" 
-                    className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white ${errors.subject ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"}`}
-                  />
-                  {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject.message}</p>}
-                </div>
-                
-                <div className="mb-6">
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
-                  <textarea 
-                    id="message"
-                    {...register("message", { required: "Message is required" })}
-                    rows={5} 
-                    placeholder="Your message here..." 
-                    className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white ${errors.message ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"}`}
-                  ></textarea>
-                  {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
-                </div>
-                
-                <button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="w-full bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors flex items-center justify-center"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Message
-                      <i className="ri-send-plane-line ml-1"></i>
-                    </>
-                  )}
-                </button>
-              </form>
+              </div>
             </div>
           </motion.div>
         </div>
