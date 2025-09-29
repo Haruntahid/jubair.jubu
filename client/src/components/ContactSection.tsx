@@ -16,22 +16,29 @@ export default function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [terminalText, setTerminalText] = useState("");
   const [currentCommand, setCurrentCommand] = useState(0);
-  
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
-  
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>();
+
   const terminalCommands = [
     "$ whoami",
     "jubair-rahman",
     "$ cat contact_info.txt",
     "Loading contact information...",
-    "$ ./establish_connection.sh"
+    "$ ./establish_connection.sh",
   ];
 
   useEffect(() => {
     const timer = setInterval(() => {
       if (currentCommand < terminalCommands.length) {
-        setTerminalText(prev => prev + terminalCommands[currentCommand] + "\n");
-        setCurrentCommand(prev => prev + 1);
+        setTerminalText(
+          (prev) => prev + terminalCommands[currentCommand] + "\n",
+        );
+        setCurrentCommand((prev) => prev + 1);
       } else {
         clearInterval(timer);
       }
@@ -39,11 +46,11 @@ export default function ContactSection() {
 
     return () => clearInterval(timer);
   }, [currentCommand]);
-  
+
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      await apiRequest('POST', '/api/contact', data);
+      await apiRequest("POST", "/api/contact", data);
       toast({
         title: "✓ Command Executed Successfully",
         description: "Message transmission completed. Response incoming...",
@@ -75,10 +82,10 @@ export default function ContactSection() {
             &gt; Initiating secure communication channel...
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Terminal Info Panel */}
-          <motion.div 
+          <motion.div
             className="space-y-6"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -98,7 +105,7 @@ export default function ContactSection() {
                   terminal - contact_session.sh
                 </div>
               </div>
-              
+
               {/* Terminal Content */}
               <div className="p-4 font-mono text-sm min-h-[300px]">
                 <div className="text-green-400 whitespace-pre-line">
@@ -114,69 +121,80 @@ export default function ContactSection() {
             {/* Contact Info as Terminal Output */}
             <div className="bg-gray-900 border border-green-400 rounded-lg p-6 font-mono">
               <div className="text-green-400 mb-4">
-                <span className="text-yellow-400">&#123;</span> contact_info <span className="text-yellow-400">&#125;</span>
+                <span className="text-yellow-400">&#123;</span> contact_info{" "}
+                <span className="text-yellow-400">&#125;</span>
               </div>
-              
+
               <div className="space-y-3 text-sm">
                 <div className="flex">
                   <span className="text-blue-400 min-w-[80px]">email:</span>
-                  <a href="mailto:jubairrahman64@gmail.com" 
-                     className="text-green-300 hover:text-green-100 hover:underline" 
-                     data-testid="link-email-main">
+                  <a
+                    href="mailto:jubairrahman64@gmail.com"
+                    className="text-green-300 hover:text-green-100 hover:underline"
+                    data-testid="link-email-main"
+                  >
                     "jubairrahman64@gmail.com"
                   </a>
                 </div>
-                
+
                 <div className="flex">
                   <span className="text-blue-400 min-w-[80px]">phone:</span>
-                  <a href="tel:+8801645763353" 
-                     className="text-green-300 hover:text-green-100 hover:underline" 
-                     data-testid="link-phone-main">
+                  <a
+                    href="tel:+8801645763353"
+                    className="text-green-300 hover:text-green-100 hover:underline"
+                    data-testid="link-phone-main"
+                  >
                     "+880-164-576-3353"
                   </a>
                 </div>
-                
+
                 <div className="flex">
                   <span className="text-blue-400 min-w-[80px]">location:</span>
                   <span className="text-green-300">"Dhaka, Bangladesh"</span>
                 </div>
-                
+
                 <div className="flex">
                   <span className="text-blue-400 min-w-[80px]">status:</span>
                   <span className="text-green-300">"available"</span>
                 </div>
               </div>
-              
+
               {/* Social Links as Commands */}
               <div className="mt-6 pt-4 border-t border-green-400">
                 <div className="text-green-400 mb-3">connection_links:</div>
                 <div className="flex flex-wrap gap-2">
-                  <a href="https://www.linkedin.com/in/thejubairahman" 
-                     target="_blank" 
-                     rel="noopener noreferrer" 
-                     className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors" 
-                     data-testid="link-linkedin">
+                  <a
+                    href="https://www.linkedin.com/in/thejubairahman"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors"
+                    data-testid="link-linkedin"
+                  >
                     ./linkedin.sh
                   </a>
-                  <a href="https://github.com/JubairRahman" 
-                     target="_blank" 
-                     rel="noopener noreferrer" 
-                     className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors" 
-                     data-testid="link-github">
+                  <a
+                    href="https://github.com/JubairRahman"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors"
+                    data-testid="link-github"
+                  >
                     ./github.sh
                   </a>
-                  <a href="mailto:jubairrahman64@gmail.com" 
-                     className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors" 
-                     data-testid="link-email">
+                  <a
+                    href="mailto:jubairrahman64@gmail.com"
+                    className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors"
+                    data-testid="link-email"
+                  >
                     ./send_mail.sh
                   </a>
                 </div>
               </div>
             </div>
           </motion.div>
-          
+
           {/* Terminal Form */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
@@ -194,45 +212,49 @@ export default function ContactSection() {
                   message_composer.exe
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <div className="text-green-400 font-mono mb-6">
-                  <span className="text-yellow-400">#</span> Initialize message transmission
+                  <span className="text-yellow-400">#</span> Initialize message
+                  transmission
                 </div>
-                
+
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   {/* Name Input */}
                   <div>
                     <label className="block text-green-400 font-mono text-sm mb-2">
                       <span className="text-blue-400">$</span> sender_name:
                     </label>
-                    <input 
-                      type="text" 
-                      {...register("name", { required: "Name parameter required" })}
+                    <input
+                      type="text"
+                      {...register("name", {
+                        required: "Name parameter required",
+                      })}
                       placeholder="Enter your name..."
                       className="w-full bg-black border border-green-400 text-green-300 font-mono px-3 py-2 focus:outline-none focus:border-green-200 focus:shadow-sm focus:shadow-green-400/50 placeholder-green-600"
                       data-testid="input-name"
                     />
                     {errors.name && (
                       <p className="text-red-400 font-mono text-xs mt-1">
-                        <span className="text-red-600">✗</span> {errors.name.message}
+                        <span className="text-red-600">✗</span>{" "}
+                        {errors.name.message}
                       </p>
                     )}
                   </div>
-                  
+
                   {/* Email Input */}
                   <div>
                     <label className="block text-green-400 font-mono text-sm mb-2">
                       <span className="text-blue-400">$</span> sender_email:
                     </label>
-                    <input 
-                      type="email" 
-                      {...register("email", { 
+                    <input
+                      type="email"
+                      {...register("email", {
                         required: "Email parameter required",
                         pattern: {
                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: "Invalid email format"
-                        }
+                          message: "Invalid email format",
+                        },
                       })}
                       placeholder="your.email@domain.com"
                       className="w-full bg-black border border-green-400 text-green-300 font-mono px-3 py-2 focus:outline-none focus:border-green-200 focus:shadow-sm focus:shadow-green-400/50 placeholder-green-600"
@@ -240,37 +262,43 @@ export default function ContactSection() {
                     />
                     {errors.email && (
                       <p className="text-red-400 font-mono text-xs mt-1">
-                        <span className="text-red-600">✗</span> {errors.email.message}
+                        <span className="text-red-600">✗</span>{" "}
+                        {errors.email.message}
                       </p>
                     )}
                   </div>
-                  
+
                   {/* Subject Input */}
                   <div>
                     <label className="block text-green-400 font-mono text-sm mb-2">
                       <span className="text-blue-400">$</span> message_subject:
                     </label>
-                    <input 
-                      type="text" 
-                      {...register("subject", { required: "Subject parameter required" })}
+                    <input
+                      type="text"
+                      {...register("subject", {
+                        required: "Subject parameter required",
+                      })}
                       placeholder="Brief message summary..."
                       className="w-full bg-black border border-green-400 text-green-300 font-mono px-3 py-2 focus:outline-none focus:border-green-200 focus:shadow-sm focus:shadow-green-400/50 placeholder-green-600"
                       data-testid="input-subject"
                     />
                     {errors.subject && (
                       <p className="text-red-400 font-mono text-xs mt-1">
-                        <span className="text-red-600">✗</span> {errors.subject.message}
+                        <span className="text-red-600">✗</span>{" "}
+                        {errors.subject.message}
                       </p>
                     )}
                   </div>
-                  
+
                   {/* Message Input */}
                   <div>
                     <label className="block text-green-400 font-mono text-sm mb-2">
                       <span className="text-blue-400">$</span> message_body:
                     </label>
-                    <textarea 
-                      {...register("message", { required: "Message body required" })}
+                    <textarea
+                      {...register("message", {
+                        required: "Message body required",
+                      })}
                       rows={5}
                       placeholder="Type your message here..."
                       className="w-full bg-black border border-green-400 text-green-300 font-mono px-3 py-2 focus:outline-none focus:border-green-200 focus:shadow-sm focus:shadow-green-400/50 placeholder-green-600 resize-none"
@@ -278,14 +306,15 @@ export default function ContactSection() {
                     ></textarea>
                     {errors.message && (
                       <p className="text-red-400 font-mono text-xs mt-1">
-                        <span className="text-red-600">✗</span> {errors.message.message}
+                        <span className="text-red-600">✗</span>{" "}
+                        {errors.message.message}
                       </p>
                     )}
                   </div>
-                  
+
                   {/* Submit Button */}
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     disabled={isSubmitting}
                     className="w-full bg-green-900 hover:bg-green-800 border border-green-400 text-green-100 font-mono py-3 px-4 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                     data-testid="button-submit"
@@ -303,13 +332,15 @@ export default function ContactSection() {
                     )}
                   </button>
                 </form>
-                
+
                 <div className="mt-4 pt-4 border-t border-green-400">
                   <div className="text-green-600 font-mono text-xs">
-                    <span className="text-yellow-400">#</span> Secure transmission protocol enabled
+                    <span className="text-yellow-400">#</span> Secure
+                    transmission protocol enabled
                   </div>
                   <div className="text-green-600 font-mono text-xs">
-                    <span className="text-yellow-400">#</span> Response time: &lt; 24 hours
+                    <span className="text-yellow-400">#</span> Response time:
+                    &lt; 24 hours
                   </div>
                 </div>
               </div>
