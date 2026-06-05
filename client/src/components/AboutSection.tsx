@@ -1,7 +1,22 @@
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { portfolioApi } from "@/lib/api";
 import profileImage from "@assets/L_In_1757586366832.jpg";
 
 export default function AboutSection() {
+  const { data: profile, isLoading } = useQuery({
+    queryKey: ["portfolio-profile"],
+    queryFn: portfolioApi.getProfile,
+  });
+
+  if (isLoading) {
+    return (
+      <section id="about" className="py-20 px-4 bg-white dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto animate-pulse h-96 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
+      </section>
+    );
+  }
+
   return (
     <section id="about" className="py-20 px-4 bg-white dark:bg-gray-800">
       <div className="max-w-7xl mx-auto">
@@ -9,9 +24,9 @@ export default function AboutSection() {
           <h2 className="text-3xl font-bold mb-4">About Me</h2>
           <div className="w-16 h-1 bg-primary mx-auto rounded-full"></div>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <motion.div 
+          <motion.div
             className="order-2 lg:order-1"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -19,12 +34,14 @@ export default function AboutSection() {
             viewport={{ once: true }}
           >
             <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-primary">Hi, I'm Jubair</h3>
+              <h3 className="text-2xl font-semibold text-primary">
+                Hi, I&apos;m {profile?.name || "QA Engineer"}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300">{profile?.bio}</p>
               <p className="text-gray-600 dark:text-gray-300">
-                I'm a dedicated QA Engineer with a passion for ensuring software quality and reliability. With over 2+ years of experience in the field, I specialize in both manual and automated testing strategies.
-              </p>
-              <p className="text-gray-600 dark:text-gray-300">
-                My approach combines analytical thinking with technical expertise to identify issues before they reach production. I believe that quality assurance is not just about finding bugs, but about improving the entire development process.
+                I focus on building reliable testing strategies, improving
+                release quality, and preventing production issues through
+                proactive QA.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
@@ -32,34 +49,42 @@ export default function AboutSection() {
                     <i className="ri-map-pin-line text-primary mr-2"></i>
                     <span className="font-medium">Location</span>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400">Dhaka, Bangladesh</p>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {profile?.location || "N/A"}
+                  </p>
                 </div>
                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                   <div className="flex items-center mb-2">
                     <i className="ri-global-line text-primary mr-2"></i>
-                    <span className="font-medium">Languages</span>
+                    <span className="font-medium">Email</span>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400">English, Bangla</p>
+                  <p className="text-gray-600 dark:text-gray-400 break-all">
+                    {profile?.email || "N/A"}
+                  </p>
                 </div>
                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                   <div className="flex items-center mb-2">
                     <i className="ri-briefcase-line text-primary mr-2"></i>
                     <span className="font-medium">Experience</span>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400">2+ Years in QA</p>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {profile?.yearsOfExperience || 0}+ Years in QA
+                  </p>
                 </div>
                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                   <div className="flex items-center mb-2">
-                    <i className="ri-graduation-cap-line text-primary mr-2"></i>
-                    <span className="font-medium">Degree</span>
+                    <i className="ri-user-star-line text-primary mr-2"></i>
+                    <span className="font-medium">Role</span>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400">B.Sc Computer Science</p>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {profile?.role || "QA Engineer"}
+                  </p>
                 </div>
               </div>
             </div>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             className="order-1 lg:order-2 flex justify-center"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -68,18 +93,11 @@ export default function AboutSection() {
           >
             <div className="relative">
               <div className="w-64 h-64 md:w-80 md:h-80 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden shadow-lg">
-                <img src={profileImage} alt="Jubair Rahman" className="w-full h-full object-cover" />
-              </div>
-              <div className="absolute -bottom-5 -right-5 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700">
-                <div className="text-xl font-bold text-primary">4.5<span className="text-sm text-gray-500">/5.0</span></div>
-                <div className="flex text-yellow-400 text-sm mt-1">
-                  <i className="ri-star-fill"></i>
-                  <i className="ri-star-fill"></i>
-                  <i className="ri-star-fill"></i>
-                  <i className="ri-star-fill"></i>
-                  <i className="ri-star-half-fill"></i>
-                </div>
-                <div className="text-xs text-gray-500 mt-1">Client Rating</div>
+                <img
+                  src={profile?.avatarUrl || profileImage}
+                  alt={profile?.name || "Profile"}
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </motion.div>

@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import { portfolioApi } from "@/lib/api";
 
 type FormData = {
   name: string;
@@ -13,6 +15,10 @@ type FormData = {
 
 export default function ContactSection() {
   const { toast } = useToast();
+  const { data: profile } = useQuery({
+    queryKey: ["portfolio-profile"],
+    queryFn: portfolioApi.getProfile,
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [terminalText, setTerminalText] = useState("");
   const [currentCommand, setCurrentCommand] = useState(0);
@@ -26,7 +32,7 @@ export default function ContactSection() {
 
   const terminalCommands = [
     "$ whoami",
-    "jubair-rahman",
+    (profile?.name || "qa-engineer").toLowerCase().replace(/\s+/g, "-"),
     "$ cat contact_info.txt",
     "Loading contact information...",
     "$ ./establish_connection.sh",
@@ -36,7 +42,7 @@ export default function ContactSection() {
     const timer = setInterval(() => {
       if (currentCommand < terminalCommands.length) {
         setTerminalText(
-          (prev) => prev + terminalCommands[currentCommand] + "\n",
+          (prev) => prev + terminalCommands[currentCommand] + "\n"
         );
         setCurrentCommand((prev) => prev + 1);
       } else {
@@ -73,7 +79,10 @@ export default function ContactSection() {
         {/* Terminal Header */}
         <div className="text-center mb-16">
           <div className="font-mono text-2xl mb-4">
-            <span className="text-green-400">[jubair@qa-portfolio]</span>
+            <span className="text-green-400">
+              [{(profile?.name || "qa-user").toLowerCase().replace(/\s+/g, "")}
+              @qa-portfolio]
+            </span>
             <span className="text-white">:~$ </span>
             <span className="text-green-300">./contact</span>
           </div>
@@ -129,28 +138,34 @@ export default function ContactSection() {
                 <div className="flex">
                   <span className="text-blue-400 min-w-[80px]">email:</span>
                   <a
-                    href="mailto:jubairrahman64@gmail.com"
+                    href={profile?.email ? `mailto:${profile.email}` : "#"}
                     className="text-green-300 hover:text-green-100 hover:underline"
                     data-testid="link-email-main"
                   >
-                    "jubairrahman64@gmail.com"
+                    {`"${profile?.email || "N/A"}"`}
                   </a>
                 </div>
 
                 <div className="flex">
                   <span className="text-blue-400 min-w-[80px]">phone:</span>
                   <a
-                    href="tel:+8801645763353"
+                    href={
+                      profile?.phone
+                        ? `tel:${profile.phone.replace(/[^+\d]/g, "")}`
+                        : "#"
+                    }
                     className="text-green-300 hover:text-green-100 hover:underline"
                     data-testid="link-phone-main"
                   >
-                    "+880-164-576-3353"
+                    {`"${profile?.phone || "N/A"}"`}
                   </a>
                 </div>
 
                 <div className="flex">
                   <span className="text-blue-400 min-w-[80px]">location:</span>
-                  <span className="text-green-300">"Dhaka, Bangladesh"</span>
+                  <span className="text-green-300">{`"${
+                    profile?.location || "N/A"
+                  }"`}</span>
                 </div>
 
                 <div className="flex">
@@ -164,7 +179,7 @@ export default function ContactSection() {
                 <div className="text-green-400 mb-3">connection_links:</div>
                 <div className="flex flex-wrap gap-2">
                   <a
-                    href="https://www.linkedin.com/in/thejubairahman"
+                    href={profile?.linkedin || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors"
@@ -173,7 +188,7 @@ export default function ContactSection() {
                     ./linkedin.sh
                   </a>
                   <a
-                    href="https://github.com/JubairRahman"
+                    href={profile?.github || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors"
@@ -182,7 +197,7 @@ export default function ContactSection() {
                     ./github.sh
                   </a>
                   <a
-                    href="mailto:jubairrahman64@gmail.com"
+                    href={profile?.email ? `mailto:${profile.email}` : "#"}
                     className="bg-gray-800 hover:bg-green-900 border border-green-400 text-green-300 hover:text-green-100 px-3 py-1 rounded text-xs font-mono transition-colors"
                     data-testid="link-email"
                   >
