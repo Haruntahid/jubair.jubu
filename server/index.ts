@@ -1,6 +1,7 @@
 import "dotenv/config";
-import { setupVite, serveStatic, log } from "./vite";
+import { setupVite, serveStatic } from "./vite";
 import { createApp } from "./app";
+import { log } from "./logger";
 
 (async () => {
   const { app, server } = await createApp();

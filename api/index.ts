@@ -4,7 +4,7 @@ import express from "express";
 import cors from "cors";
 import { connectDB } from "../server/db.js";
 import { registerRoutes } from "../server/routes.js";
-import { log } from "../server/vite.js";
+import { log } from "../server/logger.js";
 
 let cachedHandler: any;
 
@@ -29,9 +29,9 @@ async function getHandler() {
       let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
       const originalResJson = res.json;
-      res.json = function (bodyJson: any, ...args: any[]) {
+      res.json = function (bodyJson?: any) {
         capturedJsonResponse = bodyJson;
-        return originalResJson.apply(res, [bodyJson, ...args]);
+        return originalResJson.call(this, bodyJson);
       };
 
       res.on("finish", () => {
@@ -39,7 +39,10 @@ async function getHandler() {
         if (path.startsWith("/api")) {
           let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
           if (capturedJsonResponse) {
-            logLine += ` :: ${JSON.stringify(capturedJsonResponse).slice(0, 30)}`;
+            logLine += ` :: ${JSON.stringify(capturedJsonResponse).slice(
+              0,
+              30
+            )}`;
           }
           log(logLine);
         }
@@ -62,7 +65,9 @@ async function getHandler() {
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       console.error("❌ Error:", err.message);
       const status = err.status || err.statusCode || 500;
-      res.status(status).json({ message: err.message || "Internal Server Error" });
+      res
+        .status(status)
+        .json({ message: err.message || "Internal Server Error" });
     });
 
     console.log("✅ App initialized successfully");
@@ -80,6 +85,8 @@ export default async (req: any, res: any) => {
     return handler(req, res);
   } catch (error: any) {
     console.error("❌ Request handler error:", error);
-    res.status(500).json({ error: "Failed to initialize app", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to initialize app", details: error.message });
   }
 };

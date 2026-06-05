@@ -3,13 +3,24 @@ import mongoose from "mongoose";
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/qaportfolio";
 
+let connectionPromise: Promise<typeof mongoose> | null = null;
+
 export async function connectDB(): Promise<void> {
   try {
-    await mongoose.connect(MONGODB_URI);
+    if (mongoose.connection.readyState === 1) {
+      return;
+    }
+
+    if (!connectionPromise) {
+      connectionPromise = mongoose.connect(MONGODB_URI);
+    }
+
+    await connectionPromise;
     console.log("✅ MongoDB connected successfully");
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);
-    process.exit(1);
+    connectionPromise = null;
+    throw error;
   }
 }
 
