@@ -1,8 +1,8 @@
 import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
-import { connectDB } from "./db";
-import { registerRoutes } from "./routes";
-import { log } from "./logger";
+import { connectDB } from "./db.js";
+import { registerRoutes } from "./routes.js";
+import { log } from "./logger.js";
 
 export async function createApp() {
   try {
