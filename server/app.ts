@@ -48,7 +48,7 @@ export async function createApp() {
     console.log("✅ Database connected");
 
     console.log("📍 Registering routes...");
-    const server = await registerRoutes(app);
+    await registerRoutes(app);
     console.log("✅ Routes registered");
 
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -59,7 +59,7 @@ export async function createApp() {
     });
 
     console.log("✅ App created successfully");
-    return { app, server };
+    return { app };
   } catch (error) {
     console.error("❌ Failed to create app:", error);
     throw error;

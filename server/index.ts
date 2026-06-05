@@ -1,10 +1,12 @@
 import "dotenv/config";
+import { createServer } from "http";
 import { setupVite, serveStatic } from "./vite";
 import { createApp } from "./app";
 import { log } from "./logger";
 
 (async () => {
-  const { app, server } = await createApp();
+  const { app } = await createApp();
+  const server = createServer(app);
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route

@@ -1,11 +1,10 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
 import { ContactMessage } from "./models/Portfolio.js";
 import portfolioRoutes from "./routes/portfolio.js";
 import adminRoutes from "./routes/admin.js";
 import authRoutes from "./routes/auth.js";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export async function registerRoutes(app: Express): Promise<void> {
   app.use("/api/portfolio", portfolioRoutes);
   app.use("/api/auth", authRoutes);
   app.use("/api/admin", adminRoutes);
@@ -27,6 +26,4 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-
-  return createServer(app);
 }
