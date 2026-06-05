@@ -5,50 +5,63 @@ import { registerRoutes } from "./routes";
 import { log } from "./vite";
 
 export async function createApp() {
-  const app = express();
+  try {
+    console.log("📝 Creating Express app...");
+    const app = express();
 
-  app.use(cors());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
+    app.use(cors());
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: false }));
 
-  app.use((req, res, next) => {
-    const start = Date.now();
-    const path = req.path;
-    let capturedJsonResponse: Record<string, any> | undefined = undefined;
+    app.use((req, res, next) => {
+      const start = Date.now();
+      const path = req.path;
+      let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
-    const originalResJson = res.json;
-    res.json = function (bodyJson, ...args) {
-      capturedJsonResponse = bodyJson;
-      return originalResJson.apply(res, [bodyJson, ...args]);
-    };
+      const originalResJson = res.json;
+      res.json = function (bodyJson, ...args) {
+        capturedJsonResponse = bodyJson;
+        return originalResJson.apply(res, [bodyJson, ...args]);
+      };
 
-    res.on("finish", () => {
-      const duration = Date.now() - start;
-      if (path.startsWith("/api")) {
-        let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-        if (capturedJsonResponse) {
-          logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      res.on("finish", () => {
+        const duration = Date.now() - start;
+        if (path.startsWith("/api")) {
+          let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+          if (capturedJsonResponse) {
+            logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+          }
+
+          if (logLine.length > 80) {
+            logLine = logLine.slice(0, 79) + "…";
+          }
+
+          log(logLine);
         }
+      });
 
-        if (logLine.length > 80) {
-          logLine = logLine.slice(0, 79) + "…";
-        }
-
-        log(logLine);
-      }
+      next();
     });
 
-    next();
-  });
+    console.log("🔗 Connecting to database...");
+    await connectDB();
+    console.log("✅ Database connected");
 
-  await connectDB();
-  const server = await registerRoutes(app);
+    console.log("📍 Registering routes...");
+    const server = await registerRoutes(app);
+    console.log("✅ Routes registered");
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-    res.status(status).json({ message });
-  });
+    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || "Internal Server Error";
+      console.error("❌ Error caught:", message);
+      res.status(status).json({ message });
+    });
 
-  return { app, server };
+    console.log("✅ App created successfully");
+    return { app, server };
+  } catch (error) {
+    console.error("❌ Failed to create app:", error);
+    throw error;
+  }
 }
