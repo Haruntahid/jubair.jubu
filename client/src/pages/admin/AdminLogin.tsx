@@ -85,7 +85,7 @@ export default function AdminLogin() {
           </form>
 
           <p className="mt-4 text-center text-xs text-gray-500">
-            Default: <span className="text-gray-400">admin / admin123</span>
+            {/* Default: <span className="text-gray-400">admin / admin123</span> */}
           </p>
         </div>
       </div>
