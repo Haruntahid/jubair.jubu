@@ -117,6 +117,11 @@ export default function Dashboard() {
               label: "Edit Profile",
             },
             {
+              href: "/admin/sections",
+              icon: "ri-layout-line",
+              label: "Manage Sections",
+            },
+            {
               href: "/admin/projects",
               icon: "ri-add-circle-line",
               label: "Add Project",

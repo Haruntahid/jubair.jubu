@@ -23,6 +23,7 @@ import {
   AdminTerminalCommands,
 } from "@/pages/admin/AdminGeneric";
 import AdminBlogPostsEnhanced from "@/pages/admin/AdminBlogPostsEnhanced";
+import AdminSections from "@/pages/admin/AdminSections";
 
 function Router() {
   return (
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={Dashboard} />
       <Route path="/admin/profile" component={AdminProfile} />
+      <Route path="/admin/sections" component={AdminSections} />
       <Route path="/admin/skills" component={AdminSkills} />
       <Route path="/admin/projects" component={AdminProjects} />
       <Route path="/admin/experience" component={AdminExperience} />

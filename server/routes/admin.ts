@@ -14,6 +14,8 @@ import {
   TerminalCommand,
 } from "../models/Portfolio.js";
 import { authMiddleware } from "../middleware/auth.js";
+import { getSiteSections, saveSiteSections } from "../lib/siteSettings.js";
+import { isReservedTerminalCommand } from "../../shared/terminal.js";
 
 const router = Router();
 router.use(authMiddleware);
@@ -33,6 +35,27 @@ router.put("/profile", async (req, res) => {
       Object.assign(profile, req.body);
       res.json(await profile.save());
     } else res.status(201).json(await Profile.create(req.body));
+  } catch (e) {
+    res.status(500).json({ message: "Server error", e });
+  }
+});
+
+// ── Site Sections ───────────────────────────────────────────────────────────
+router.get("/site-sections", async (_req, res) => {
+  try {
+    res.json(await getSiteSections());
+  } catch (e) {
+    res.status(500).json({ message: "Server error", e });
+  }
+});
+
+router.put("/site-sections", async (req, res) => {
+  try {
+    const { sections } = req.body;
+    if (!Array.isArray(sections)) {
+      return res.status(400).json({ message: "sections array is required" });
+    }
+    res.json(await saveSiteSections(sections));
   } catch (e) {
     res.status(500).json({ message: "Server error", e });
   }
@@ -369,28 +392,55 @@ router.delete("/testing-approaches/:id", async (req, res) => {
 // ── Terminal Commands ───────────────────────────────────────────────────────
 router.get("/terminal-commands", async (_req, res) => {
   try {
-    res.json(await TerminalCommand.find().sort({ order: 1, createdAt: -1 }));
+    const commands = await TerminalCommand.find().sort({
+      order: 1,
+      createdAt: -1,
+    });
+    res.json(
+      commands.filter(
+        (cmd) => !isReservedTerminalCommand(cmd.command)
+      )
+    );
   } catch (e) {
     res.status(500).json({ message: "Server error", e });
   }
 });
 router.post("/terminal-commands", async (req, res) => {
   try {
-    res.status(201).json(await TerminalCommand.create(req.body));
+    const command = String(req.body.command || "").trim().toLowerCase();
+    if (isReservedTerminalCommand(command)) {
+      return res.status(400).json({
+        message: `'${command}' is a built-in command and cannot be customized`,
+      });
+    }
+    res.status(201).json(
+      await TerminalCommand.create({ ...req.body, command })
+    );
   } catch (e) {
     res.status(500).json({ message: "Server error", e });
   }
 });
 router.put("/terminal-commands/:id", async (req, res) => {
   try {
+    const existing = await TerminalCommand.findById(req.params.id);
+    if (!existing) return res.status(404).json({ message: "Not found" });
+
+    const command = String(
+      req.body.command ?? existing.command
+    )
+      .trim()
+      .toLowerCase();
+    if (isReservedTerminalCommand(command)) {
+      return res.status(400).json({
+        message: `'${command}' is a built-in command and cannot be customized`,
+      });
+    }
+
     const doc = await TerminalCommand.findByIdAndUpdate(
       req.params.id,
-      req.body,
-      {
-        new: true,
-      }
+      { ...req.body, command },
+      { new: true }
     );
-    if (!doc) return res.status(404).json({ message: "Not found" });
     res.json(doc);
   } catch (e) {
     res.status(500).json({ message: "Server error", e });
@@ -398,8 +448,14 @@ router.put("/terminal-commands/:id", async (req, res) => {
 });
 router.delete("/terminal-commands/:id", async (req, res) => {
   try {
-    if (!(await TerminalCommand.findByIdAndDelete(req.params.id)))
-      return res.status(404).json({ message: "Not found" });
+    const existing = await TerminalCommand.findById(req.params.id);
+    if (!existing) return res.status(404).json({ message: "Not found" });
+    if (isReservedTerminalCommand(existing.command)) {
+      return res.status(400).json({
+        message: "Built-in commands cannot be deleted",
+      });
+    }
+    await TerminalCommand.findByIdAndDelete(req.params.id);
     res.json({ message: "Deleted" });
   } catch (e) {
     res.status(500).json({ message: "Server error", e });

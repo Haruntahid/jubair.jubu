@@ -3,6 +3,7 @@ import AdminLayout from "./AdminLayout";
 import { adminApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import IconClassField from "@/components/admin/IconClassField";
 import {
   validateProfile,
   validateSkill,
@@ -14,11 +15,12 @@ import {
   validateBlogPost,
   validateTerminalCommand,
 } from "@/lib/validation";
+import { BUILT_IN_COMMANDS } from "@/lib/terminal-commands";
 
 interface FieldDef {
   key: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "checkbox" | "url";
+  type?: "text" | "textarea" | "number" | "checkbox" | "url" | "icon";
   placeholder?: string;
   span2?: boolean;
   required?: boolean;
@@ -39,6 +41,7 @@ interface Props {
   emptyForm: Record<string, any>;
   renderCard: (item: any) => React.ReactNode;
   validator?: (data: any) => { isValid: boolean; errors: ValidationError[] };
+  embedded?: boolean;
 }
 
 function AdminGeneric({
@@ -51,6 +54,7 @@ function AdminGeneric({
   emptyForm,
   renderCard,
   validator,
+  embedded = false,
 }: Props) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -133,8 +137,8 @@ function AdminGeneric({
     }
   };
 
-  return (
-    <AdminLayout>
+  const content = (
+    <>
       <ConfirmDialog
         open={!!deleteId}
         title={`Delete ${title}`}
@@ -237,6 +241,22 @@ function AdminGeneric({
                     />
                     <span className="text-sm text-gray-400">{f.label}</span>
                   </div>
+                ) : f.type === "icon" ? (
+                  <>
+                    <IconClassField
+                      value={form[f.key] ?? ""}
+                      onChange={(value) =>
+                        setForm((p: any) => ({ ...p, [f.key]: value }))
+                      }
+                      placeholder={f.placeholder || "ri-link"}
+                    />
+                    {fieldErrors[f.key] && (
+                      <p className="text-red-400 text-xs mt-1 flex items-center gap-1">
+                        <i className="ri-error-warning-line text-xs" />
+                        {fieldErrors[f.key]}
+                      </p>
+                    )}
+                  </>
                 ) : (
                   <>
                     <input
@@ -360,8 +380,10 @@ function AdminGeneric({
           ))}
         </div>
       )}
-    </AdminLayout>
+    </>
   );
+
+  return embedded ? content : <AdminLayout>{content}</AdminLayout>;
 }
 
 // ── Education ─────────────────────────────────────────────────────────────────
@@ -574,7 +596,12 @@ export function AdminBlogPosts() {
         { key: "url", label: "URL", type: "url", required: true },
         { key: "date", label: "Display Date", required: true },
         { key: "category", label: "Category", required: true },
-        { key: "icon", label: "Icon Class" },
+        {
+          key: "icon",
+          label: "Icon Class",
+          type: "icon",
+          placeholder: "ri-file-text-line",
+        },
         { key: "order", label: "Sort Order", type: "number" },
       ]}
       validator={(data) =>
@@ -623,16 +650,28 @@ export function AdminProcessSteps() {
           type: "textarea",
           span2: true,
         },
-        { key: "icon", label: "Icon Class" },
+        {
+          key: "icon",
+          label: "Icon Class",
+          type: "icon",
+          placeholder: "ri-flow-chart",
+        },
         { key: "order", label: "Sort Order", type: "number" },
       ]}
       renderCard={(item) => (
         <>
-          <p className="font-semibold text-white">{item.title}</p>
-          <p className="text-gray-400 text-sm line-clamp-2">
-            {item.description}
-          </p>
-          <p className="text-gray-500 text-xs mt-1">{item.icon}</p>
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 flex items-center justify-center bg-gray-800 rounded-lg flex-shrink-0">
+              <i className={`${item.icon || "ri-flow-chart"} text-emerald-400`} />
+            </div>
+            <div>
+              <p className="font-semibold text-white">{item.title}</p>
+              <p className="text-gray-400 text-sm line-clamp-2">
+                {item.description}
+              </p>
+              <p className="text-gray-500 text-xs mt-1">{item.icon}</p>
+            </div>
+          </div>
         </>
       )}
     />
@@ -658,7 +697,12 @@ export function AdminTestingApproaches() {
       fields={[
         { key: "key", label: "Unique Key" },
         { key: "title", label: "Title" },
-        { key: "icon", label: "Icon Class" },
+        {
+          key: "icon",
+          label: "Icon Class",
+          type: "icon",
+          placeholder: "ri-check-line",
+        },
         {
           key: "points",
           label: "Points (comma separated)",
@@ -688,51 +732,84 @@ export function AdminTestingApproaches() {
 
 // ── Terminal Commands ───────────────────────────────────────────────────────
 export function AdminTerminalCommands() {
+  const builtInList = Object.values(BUILT_IN_COMMANDS);
+
   return (
-    <AdminGeneric
-      title="Terminal Commands"
-      getItems={adminApi.getTerminalCommands}
-      createItem={adminApi.createTerminalCommand}
-      updateItem={adminApi.updateTerminalCommand}
-      deleteItem={adminApi.deleteTerminalCommand}
-      emptyForm={{
-        command: "",
-        description: "",
-        output: "",
-        category: "Custom",
-        active: true,
-        order: 0,
-      }}
-      fields={[
-        { key: "command", label: "Command", required: true },
-        { key: "description", label: "Description", required: true },
-        {
-          key: "output",
-          label: "Output",
-          type: "textarea",
-          span2: true,
-          required: true,
-        },
-        { key: "category", label: "Category" },
-        { key: "active", label: "Active", type: "checkbox" },
-        { key: "order", label: "Sort Order", type: "number" },
-      ]}
-      validator={validateTerminalCommand}
-      renderCard={(item) => (
-        <>
-          <p className="font-semibold text-white">{item.command}</p>
-          <p className="text-gray-400 text-sm line-clamp-2">
-            {item.description}
+    <AdminLayout>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Terminal Commands</h1>
+          <p className="text-gray-400 text-sm mt-1">
+            Built-in commands are fixed in code. Add custom commands below for
+            extra terminal responses.
           </p>
-          <p className="text-gray-500 text-xs mt-1 line-clamp-2">
-            {item.output}
-          </p>
-          <p className="text-gray-500 text-xs mt-1">
-            {item.category || "Custom"} ·{" "}
-            {item.active === false ? "Hidden" : "Visible"}
-          </p>
-        </>
-      )}
-    />
+        </div>
+
+        <section className="bg-gray-900 border border-emerald-500/20 rounded-xl p-5">
+          <h2 className="text-base font-semibold text-emerald-400 mb-4">
+            Built-in Commands (read-only)
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {builtInList.map((cmd) => (
+              <div
+                key={cmd.name}
+                className="rounded-lg border border-gray-800 bg-gray-950/60 p-3"
+              >
+                <p className="font-mono text-green-400 text-sm">{cmd.name}</p>
+                <p className="text-gray-400 text-xs mt-1">{cmd.description}</p>
+                <p className="text-gray-600 text-xs mt-1">{cmd.category}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <AdminGeneric
+          embedded
+          title="Custom Terminal Commands"
+          getItems={adminApi.getTerminalCommands}
+          createItem={adminApi.createTerminalCommand}
+          updateItem={adminApi.updateTerminalCommand}
+          deleteItem={adminApi.deleteTerminalCommand}
+          emptyForm={{
+            command: "",
+            description: "",
+            output: "",
+            category: "Custom",
+            active: true,
+            order: 0,
+          }}
+          fields={[
+            { key: "command", label: "Command", required: true },
+            { key: "description", label: "Description", required: true },
+            {
+              key: "output",
+              label: "Output",
+              type: "textarea",
+              span2: true,
+              required: true,
+            },
+            { key: "category", label: "Category" },
+            { key: "active", label: "Active", type: "checkbox" },
+            { key: "order", label: "Sort Order", type: "number" },
+          ]}
+          validator={validateTerminalCommand}
+          renderCard={(item) => (
+            <>
+              <p className="font-semibold text-white">{item.command}</p>
+              <p className="text-gray-400 text-sm line-clamp-2">
+                {item.description}
+              </p>
+              <p className="text-gray-500 text-xs mt-1 line-clamp-2">
+                {item.output}
+              </p>
+              <p className="text-gray-500 text-xs mt-1">
+                {item.category || "Custom"} ·{" "}
+                {item.active === false ? "Hidden" : "Visible"}
+              </p>
+            </>
+          )}
+        />
+      </div>
+    </AdminLayout>
   );
 }

@@ -6,6 +6,7 @@ import { adminApi } from "@/lib/api";
 const navItems = [
   { path: "/admin/dashboard", icon: "ri-dashboard-line", label: "Dashboard" },
   { path: "/admin/profile", icon: "ri-user-line", label: "Profile" },
+  { path: "/admin/sections", icon: "ri-layout-line", label: "Sections" },
   { path: "/admin/skills", icon: "ri-tools-line", label: "Skills" },
   { path: "/admin/projects", icon: "ri-folder-line", label: "Projects" },
   { path: "/admin/experience", icon: "ri-briefcase-line", label: "Experience" },

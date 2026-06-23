@@ -3,6 +3,9 @@ import AdminLayout from "./AdminLayout";
 import { adminApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import IconClassField, {
+  REMIX_ICON_CATALOG_URL,
+} from "@/components/admin/IconClassField";
 import { validateBlogPost } from "@/lib/validation";
 
 const ICON_OPTIONS = [
@@ -417,7 +420,15 @@ export default function AdminBlogPostsEnhanced() {
                 ))}
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                Selected: {form.icon}
+                Selected: {form.icon} ·{" "}
+                <a
+                  href={REMIX_ICON_CATALOG_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-400 hover:underline"
+                >
+                  Browse all icons
+                </a>
               </p>
               {form.imageUrl && (
                 <p className="text-xs text-amber-400 mt-1">

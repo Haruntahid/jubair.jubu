@@ -35,6 +35,8 @@ export const portfolioApi = {
   getProcessSteps: () => request("/portfolio/process-steps"),
   getTestingApproaches: () => request("/portfolio/testing-approaches"),
   getTerminalCommands: () => request("/portfolio/terminal-commands"),
+  getSiteSections: () => request("/portfolio/site-sections"),
+  getGithubContributions: () => request("/portfolio/github-contributions"),
 };
 
 export const authApi = {
@@ -221,6 +223,13 @@ export const adminApi = {
     }),
   deleteTerminalCommand: (id: string) =>
     request(`/admin/terminal-commands/${id}`, { method: "DELETE" }),
+
+  getSiteSections: () => request("/admin/site-sections"),
+  updateSiteSections: (sections: any[]) =>
+    request("/admin/site-sections", {
+      method: "PUT",
+      body: JSON.stringify({ sections }),
+    }),
 
   getMessages: () => request("/admin/messages"),
   getUnreadCount: () =>

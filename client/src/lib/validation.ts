@@ -313,11 +313,18 @@ export const validateContactMessage = (data: any): ValidationResult => {
 /**
  * Terminal command validation
  */
+import { isReservedTerminalCommand } from "@shared/terminal";
+
 export const validateTerminalCommand = (data: any): ValidationResult => {
   const errors: ValidationError[] = [];
 
   if (!data.command?.trim()) {
     errors.push({ field: "command", message: "Command is required" });
+  } else if (isReservedTerminalCommand(data.command)) {
+    errors.push({
+      field: "command",
+      message: "This command name is reserved for built-in terminal behavior",
+    });
   }
 
   if (!data.description?.trim()) {

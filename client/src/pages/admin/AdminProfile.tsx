@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import AdminLayout from "./AdminLayout";
 import { adminApi, authApi } from "@/lib/api";
 import { getAdmin, updateAdmin } from "@/lib/adminAuth";
+import IconClassField from "@/components/admin/IconClassField";
+import type { SocialLink } from "@shared/social";
 
 export default function AdminProfile() {
   const [profile, setProfile] = useState<any>(null);
@@ -27,7 +29,12 @@ export default function AdminProfile() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const updated = await adminApi.updateProfile(profile);
+      const updated = await adminApi.updateProfile({
+        ...profile,
+        socialLinks: (profile?.socialLinks || []).filter(
+          (link: SocialLink) => link.url?.trim()
+        ),
+      });
       setProfile(updated);
       setSavedMsg("Saved!");
       setTimeout(() => setSavedMsg(""), 3000);
@@ -36,6 +43,42 @@ export default function AdminProfile() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const addSocialLink = () => {
+    setProfile((p: any) => ({
+      ...p,
+      socialLinks: [
+        ...(p?.socialLinks || []),
+        {
+          label: "Website",
+          url: "",
+          icon: "ri-link",
+          order: (p?.socialLinks?.length || 0) + 1,
+        },
+      ],
+    }));
+  };
+
+  const updateSocialLink = (
+    index: number,
+    key: keyof SocialLink,
+    value: string | number
+  ) => {
+    setProfile((p: any) => {
+      const links = [...(p?.socialLinks || [])];
+      links[index] = { ...links[index], [key]: value };
+      return { ...p, socialLinks: links };
+    });
+  };
+
+  const removeSocialLink = (index: number) => {
+    setProfile((p: any) => ({
+      ...p,
+      socialLinks: (p?.socialLinks || []).filter(
+        (_: SocialLink, i: number) => i !== index
+      ),
+    }));
   };
 
   const handleCredentialsSave = async () => {
@@ -186,8 +229,100 @@ export default function AdminProfile() {
               Social Links
             </h2>
             <div className="space-y-4">
-              {inp("github", "GitHub URL")} {inp("linkedin", "LinkedIn URL")}{" "}
+              {inp("github", "GitHub URL")}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  GitHub Username
+                </label>
+                <input
+                  type="text"
+                  value={profile?.githubUsername ?? ""}
+                  onChange={(e) =>
+                    setProfile((p: any) => ({
+                      ...p,
+                      githubUsername: e.target.value,
+                    }))
+                  }
+                  placeholder="your-github-handle"
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Used for the contribution graph. Falls back to your GitHub URL
+                  if left empty.
+                </p>
+              </div>
+              {inp("linkedin", "LinkedIn URL")}
               {inp("twitter", "Twitter URL")}
+
+              <div className="pt-2 border-t border-gray-800">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-medium text-gray-300">
+                    Additional Social Links
+                  </p>
+                  <button
+                    type="button"
+                    onClick={addSocialLink}
+                    className="text-sm text-emerald-400 hover:text-emerald-300"
+                  >
+                    + Add Link
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  {(profile?.socialLinks || []).map(
+                    (link: SocialLink, index: number) => (
+                      <div
+                        key={index}
+                        className="grid sm:grid-cols-[1fr_1.5fr_1fr_auto] gap-3 items-end bg-gray-800/50 p-3 rounded-lg"
+                      >
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">
+                            Label
+                          </label>
+                          <input
+                            value={link.label}
+                            onChange={(e) =>
+                              updateSocialLink(index, "label", e.target.value)
+                            }
+                            className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">
+                            URL
+                          </label>
+                          <input
+                            value={link.url}
+                            onChange={(e) =>
+                              updateSocialLink(index, "url", e.target.value)
+                            }
+                            className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">
+                            Icon class
+                          </label>
+                          <IconClassField
+                            value={link.icon}
+                            onChange={(value) =>
+                              updateSocialLink(index, "icon", value)
+                            }
+                            placeholder="ri-link"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeSocialLink(index)}
+                          className="px-3 py-2 text-red-400 hover:bg-red-500/10 rounded-lg"
+                        >
+                          <i className="ri-delete-bin-line"></i>
+                        </button>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
             </div>
           </section>
 

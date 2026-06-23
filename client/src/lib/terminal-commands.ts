@@ -3,6 +3,9 @@
  * Built-in commands for the contact terminal session
  */
 
+import { isReservedTerminalCommand } from "@shared/terminal";
+import { getProfileSocialLinks } from "@shared/social";
+
 export interface CommandResult {
   output: string;
   type: "success" | "error" | "info" | "output";
@@ -76,39 +79,42 @@ export const BUILT_IN_COMMANDS = {
   },
 };
 
+const resolveCustomOutput = (template: string, profileData?: any) =>
+  template
+    .replace(/\{name\}/gi, profileData?.name || "Guest")
+    .replace(/\{role\}/gi, profileData?.role || "QA Engineer")
+    .replace(/\{email\}/gi, profileData?.email || "contact@example.com")
+    .replace(/\{phone\}/gi, profileData?.phone || "N/A")
+    .replace(/\{location\}/gi, profileData?.location || "N/A");
+
 export const executeCommand = (
   command: string,
   profileData?: any,
   dynamicCommands: TerminalCommandData[] = []
 ): CommandResult[] => {
-  const cmd = command.trim().toLowerCase();
+  const cmd = command.trim();
   const results: CommandResult[] = [];
   const timestamp = new Date().toLocaleTimeString();
 
-  // Parse command and arguments
   const parts = cmd.split(/\s+/);
-  const mainCmd = parts[0];
+  const mainCmd = parts[0].toLowerCase();
   const args = parts.slice(1).join(" ");
 
-  const customCommand = dynamicCommands.find(
-    (item) => item.active !== false && item.command.toLowerCase() === mainCmd
-  );
+  if (!isReservedTerminalCommand(mainCmd)) {
+    const customCommand = dynamicCommands.find(
+      (item) =>
+        item.active !== false && item.command.toLowerCase() === mainCmd
+    );
 
-  if (customCommand) {
-    const resolvedOutput = customCommand.output
-      .replace(/\{name\}/gi, profileData?.name || "Guest")
-      .replace(/\{role\}/gi, profileData?.role || "QA Engineer")
-      .replace(/\{email\}/gi, profileData?.email || "contact@example.com")
-      .replace(/\{phone\}/gi, profileData?.phone || "N/A")
-      .replace(/\{location\}/gi, profileData?.location || "N/A");
-
-    return [
-      {
-        output: resolvedOutput,
-        type: "output",
-        timestamp,
-      },
-    ];
+    if (customCommand) {
+      return [
+        {
+          output: resolveCustomOutput(customCommand.output, profileData),
+          type: "output",
+          timestamp,
+        },
+      ];
+    }
   }
 
   switch (mainCmd) {
@@ -118,6 +124,14 @@ export const executeCommand = (
           "Available Commands:\n" +
           Object.entries(BUILT_IN_COMMANDS)
             .map(([_, cmd]) => `  ${cmd.name.padEnd(25)} - ${cmd.description}`)
+            .concat(
+              dynamicCommands
+                .filter((item) => item.active !== false)
+                .map(
+                  (item) =>
+                    `  ${item.command.padEnd(25)} - ${item.description}`
+                )
+            )
             .join("\n"),
         type: "info",
         timestamp,
@@ -170,34 +184,30 @@ export const executeCommand = (
       });
       break;
 
-    case "social":
+    case "social": {
+      const links = getProfileSocialLinks(profileData);
       results.push({
         output: "Social Media Links:",
         type: "info",
         timestamp,
       });
-      if (profileData?.github) {
+      if (links.length === 0) {
         results.push({
-          output: `  GitHub: ${profileData.github}`,
+          output: "  No social links configured",
           type: "output",
           timestamp,
         });
-      }
-      if (profileData?.linkedin) {
-        results.push({
-          output: `  LinkedIn: ${profileData.linkedin}`,
-          type: "output",
-          timestamp,
-        });
-      }
-      if (profileData?.twitter) {
-        results.push({
-          output: `  Twitter: ${profileData.twitter}`,
-          type: "output",
-          timestamp,
+      } else {
+        links.forEach((link) => {
+          results.push({
+            output: `  ${link.label}: ${link.url}`,
+            type: "output",
+            timestamp,
+          });
         });
       }
       break;
+    }
 
     case "date":
       results.push({

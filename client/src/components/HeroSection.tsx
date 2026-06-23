@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { portfolioApi } from "@/lib/api";
+import { getProfileSocialLinks } from "@shared/social";
 import profileImage from "@assets/L_In_1757586366832.jpg";
 
 export default function HeroSection() {
@@ -8,6 +9,7 @@ export default function HeroSection() {
     queryKey: ["portfolio-profile"],
     queryFn: portfolioApi.getProfile,
   });
+  const socialLinks = getProfileSocialLinks(profile);
 
   if (isLoading) {
     return (
@@ -125,27 +127,19 @@ export default function HeroSection() {
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       {profile?.role || "QA Professional"}
                     </p>
-                    <div className="flex mt-2 space-x-2">
-                      {profile?.linkedin && (
+                    <div className="flex mt-2 flex-wrap gap-2">
+                      {socialLinks.map((link) => (
                         <a
-                          href={profile.linkedin}
+                          key={link.url}
+                          href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
+                          title={link.label}
                           className="text-gray-500 hover:text-primary"
                         >
-                          <i className="ri-linkedin-fill"></i>
+                          <i className={link.icon}></i>
                         </a>
-                      )}
-                      {profile?.github && (
-                        <a
-                          href={profile.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-500 hover:text-primary"
-                        >
-                          <i className="ri-github-fill"></i>
-                        </a>
-                      )}
+                      ))}
                       {profile?.email && (
                         <a
                           href={`mailto:${profile.email}`}

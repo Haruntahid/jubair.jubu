@@ -1,5 +1,13 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+// ─── Social Link ────────────────────────────────────────────────────────────
+export interface ISocialLink {
+  label: string;
+  url: string;
+  icon: string;
+  order: number;
+}
+
 // ─── Profile ────────────────────────────────────────────────────────────────
 export interface IProfile extends Document {
   name: string;
@@ -10,8 +18,10 @@ export interface IProfile extends Document {
   phone: string;
   location: string;
   github: string;
+  githubUsername: string;
   linkedin: string;
   twitter: string;
+  socialLinks: ISocialLink[];
   resumeUrl: string;
   avatarUrl: string;
   yearsOfExperience: number;
@@ -19,6 +29,16 @@ export interface IProfile extends Document {
   projectsTested: number;
   testCasesWritten: number;
 }
+const SocialLinkSchema = new Schema<ISocialLink>(
+  {
+    label: { type: String, required: true },
+    url: { type: String, required: true },
+    icon: { type: String, default: "ri-link" },
+    order: { type: Number, default: 0 },
+  },
+  { _id: false }
+);
+
 const ProfileSchema = new Schema<IProfile>(
   {
     name: { type: String, required: true },
@@ -29,14 +49,45 @@ const ProfileSchema = new Schema<IProfile>(
     phone: { type: String, default: "" },
     location: { type: String, default: "" },
     github: { type: String, default: "" },
+    githubUsername: { type: String, default: "" },
     linkedin: { type: String, default: "" },
     twitter: { type: String, default: "" },
+    socialLinks: { type: [SocialLinkSchema], default: [] },
     resumeUrl: { type: String, default: "" },
     avatarUrl: { type: String, default: "" },
     yearsOfExperience: { type: Number, default: 0 },
     bugsFound: { type: Number, default: 0 },
     projectsTested: { type: Number, default: 0 },
     testCasesWritten: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
+
+// ─── Site Settings ──────────────────────────────────────────────────────────
+export interface ISiteSection {
+  key: string;
+  label: string;
+  order: number;
+  visible: boolean;
+}
+
+export interface ISiteSettings extends Document {
+  sections: ISiteSection[];
+}
+
+const SiteSectionSchema = new Schema<ISiteSection>(
+  {
+    key: { type: String, required: true },
+    label: { type: String, required: true },
+    order: { type: Number, required: true },
+    visible: { type: Boolean, default: true },
+  },
+  { _id: false }
+);
+
+const SiteSettingsSchema = new Schema<ISiteSettings>(
+  {
+    sections: { type: [SiteSectionSchema], default: [] },
   },
   { timestamps: true }
 );
@@ -351,4 +402,8 @@ export const ContactMessage = mongoose.model<IContactMessage>(
 export const AdminUser = mongoose.model<IAdminUser>(
   "AdminUser",
   AdminUserSchema
+);
+export const SiteSettings = mongoose.model<ISiteSettings>(
+  "SiteSettings",
+  SiteSettingsSchema
 );

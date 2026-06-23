@@ -2,6 +2,19 @@ import { useState, useEffect } from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { useQuery } from "@tanstack/react-query";
 import { portfolioApi } from "@/lib/api";
+import { DEFAULT_SECTIONS } from "@shared/sections";
+
+const SECTION_ANCHORS: Record<string, string> = {
+  about: "#about",
+  skills: "#skills",
+  process: "#process",
+  projects: "#projects",
+  blog: "#blog",
+  experience: "#experience",
+  certifications: "#certifications",
+  github: "#github",
+  contact: "#contact",
+};
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
@@ -9,8 +22,16 @@ export default function Navbar() {
     queryKey: ["portfolio-profile"],
     queryFn: portfolioApi.getProfile,
   });
+  const { data: sections = DEFAULT_SECTIONS } = useQuery({
+    queryKey: ["portfolio-site-sections"],
+    queryFn: portfolioApi.getSiteSections,
+  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const navSections = [...sections]
+    .filter((section) => section.visible && section.key !== "hero")
+    .sort((a, b) => a.order - b.order);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,8 +42,14 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavLinkClick = () => {
+  const handleNavLinkClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    e.preventDefault();
     setMobileMenuOpen(false);
+    window.history.pushState(null, "", href);
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
   };
 
   return (
@@ -42,56 +69,27 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-6">
-            <a
-              href="#about"
-              className="hover:text-primary dark:hover:text-primary font-medium"
-            >
-              About
-            </a>
-            <a
-              href="#skills"
-              className="hover:text-primary dark:hover:text-primary font-medium"
-            >
-              Skills
-            </a>
-            <a
-              href="#process"
-              className="hover:text-primary dark:hover:text-primary font-medium"
-            >
-              Process
-            </a>
-            <a
-              href="#projects"
-              className="hover:text-primary dark:hover:text-primary font-medium"
-            >
-              Projects
-            </a>
-            <a
-              href="#blog"
-              className="hover:text-primary dark:hover:text-primary font-medium"
-            >
-              Blog
-            </a>
-            <a
-              href="#experience"
-              className="hover:text-primary dark:hover:text-primary font-medium"
-            >
-              Experience
-            </a>
-            <a
-              href="#certifications"
-              className="hover:text-primary dark:hover:text-primary font-medium"
-            >
-              Certifications
-            </a>
-            <a
-              href="#contact"
-              className="hover:text-primary dark:hover:text-primary font-medium"
-            >
-              Contact
-            </a>
+            {navSections.map((section) => {
+              const href =
+                SECTION_ANCHORS[section.key] || `#${section.key}`;
+              return (
+                <a
+                  key={section.key}
+                  href={href}
+                  onClick={(e) => {
+                    if (window.location.pathname === "/") {
+                      e.preventDefault();
+                      window.history.pushState(null, "", href);
+                      window.dispatchEvent(new HashChangeEvent("hashchange"));
+                    }
+                  }}
+                  className="hover:text-primary dark:hover:text-primary font-medium"
+                >
+                  {section.label}
+                </a>
+              );
+            })}
 
             <button
               onClick={toggleTheme}
@@ -110,7 +108,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Mobile menu button */}
           <div className="flex md:hidden items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -147,69 +144,25 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       <div
         className={`md:hidden ${
           mobileMenuOpen ? "" : "hidden"
         } transition-all duration-200 ease-in-out`}
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-800 shadow-lg">
-          <a
-            href="#about"
-            onClick={handleNavLinkClick}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            About
-          </a>
-          <a
-            href="#skills"
-            onClick={handleNavLinkClick}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            Skills
-          </a>
-          <a
-            href="#process"
-            onClick={handleNavLinkClick}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            Process
-          </a>
-          <a
-            href="#projects"
-            onClick={handleNavLinkClick}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            Projects
-          </a>
-          <a
-            href="#blog"
-            onClick={handleNavLinkClick}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            Blog
-          </a>
-          <a
-            href="#experience"
-            onClick={handleNavLinkClick}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            Experience
-          </a>
-          <a
-            href="#certifications"
-            onClick={handleNavLinkClick}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            Certifications
-          </a>
-          <a
-            href="#contact"
-            onClick={handleNavLinkClick}
-            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            Contact
-          </a>
+          {navSections.map((section) => {
+            const href = SECTION_ANCHORS[section.key] || `#${section.key}`;
+            return (
+              <a
+                key={section.key}
+                href={href}
+                onClick={(e) => handleNavLinkClick(e, href)}
+                className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                {section.label}
+              </a>
+            );
+          })}
         </div>
       </div>
     </nav>

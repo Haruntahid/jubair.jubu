@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AdminLayout from "./AdminLayout";
 import { adminApi } from "@/lib/api";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import IconClassField from "@/components/admin/IconClassField";
 
 const EMPTY = { category: "", name: "", level: 80, icon: "", order: 0 };
 const CATS = ["Testing Types", "Tools", "Programming", "Methodologies"];
@@ -131,13 +132,9 @@ export default function AdminSkills() {
               <label className="block text-sm text-gray-300 mb-1">
                 Icon (Remix Icon class)
               </label>
-              <input
-                type="text"
+              <IconClassField
                 value={form.icon}
-                onChange={(e) =>
-                  setForm((p: any) => ({ ...p, icon: e.target.value }))
-                }
-                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-emerald-500"
+                onChange={(value) => setForm((p: any) => ({ ...p, icon: value }))}
                 placeholder="ri-code-line"
               />
             </div>

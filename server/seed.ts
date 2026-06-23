@@ -13,8 +13,10 @@ import {
   ProcessStep,
   TestingApproach,
   TerminalCommand,
+  SiteSettings,
 } from "./models/Portfolio.js";
 import bcrypt from "bcryptjs";
+import { DEFAULT_SECTIONS } from "../shared/sections.js";
 
 import {
   programmingSkills,
@@ -47,6 +49,7 @@ async function seed() {
     ProcessStep.deleteMany({}),
     TestingApproach.deleteMany({}),
     TerminalCommand.deleteMany({}),
+    SiteSettings.deleteMany({}),
     AdminUser.deleteMany({}),
   ]);
 
@@ -65,10 +68,19 @@ async function seed() {
     phone: process.env.PROFILE_PHONE || "+880-164-576-3353",
     location: process.env.PROFILE_LOCATION || "Dhaka, Bangladesh",
     github: process.env.PROFILE_GITHUB || "https://github.com/JubairRahman",
+    githubUsername: process.env.PROFILE_GITHUB_USERNAME || "JubairRahman",
     linkedin:
       process.env.PROFILE_LINKEDIN ||
       "https://www.linkedin.com/in/thejubairahman",
     twitter: process.env.PROFILE_TWITTER || "",
+    socialLinks: [
+      {
+        label: "Portfolio",
+        url: "https://jubairrahman.dev",
+        icon: "ri-global-line",
+        order: 4,
+      },
+    ],
     resumeUrl: process.env.PROFILE_RESUME_URL || "#",
     avatarUrl: process.env.PROFILE_AVATAR_URL || "",
     yearsOfExperience: Number(process.env.PROFILE_YEARS || 2),
@@ -192,101 +204,13 @@ async function seed() {
 
   await TerminalCommand.insertMany([
     {
-      command: "help",
-      description: "Show available commands",
-      output: "Shows all available command names and descriptions.",
-      category: "System",
-      active: true,
-      order: 1,
-    },
-    {
-      command: "whoami",
-      description: "Display current user information",
-      output: "Shows name, role, and years of experience.",
-      category: "System",
-      active: true,
-      order: 2,
-    },
-    {
-      command: "contact",
-      description: "Show contact information",
-      output: "Shows email, phone, and location.",
-      category: "Contact",
-      active: true,
-      order: 3,
-    },
-    {
-      command: "email",
-      description: "Send email message",
-      output: "Captures an email draft message in the terminal.",
-      category: "Contact",
-      active: true,
-      order: 4,
-    },
-    {
-      command: "social",
-      description: "Show social media links",
-      output: "Shows GitHub, LinkedIn, and Twitter links.",
-      category: "Contact",
-      active: true,
-      order: 5,
-    },
-    {
-      command: "send",
-      description: "Open contact form",
-      output: "Opens the message composer on the right panel.",
-      category: "Contact",
-      active: true,
-      order: 6,
-    },
-    {
-      command: "date",
-      description: "Show current date and time",
-      output: "Displays current date and time.",
-      category: "System",
-      active: true,
-      order: 7,
-    },
-    {
-      command: "status",
-      description: "Check system status",
-      output: "Displays system health details.",
-      category: "System",
-      active: true,
-      order: 8,
-    },
-    {
-      command: "echo",
-      description: "Echo text to terminal",
-      output: "Returns the text you type after echo.",
-      category: "System",
-      active: true,
-      order: 9,
-    },
-    {
-      command: "pwd",
-      description: "Print working directory",
-      output: "/home/qa-engineer/portfolio",
-      category: "System",
-      active: true,
-      order: 10,
-    },
-    {
-      command: "clear",
-      description: "Clear terminal history",
-      output: "Clears the current terminal output area.",
-      category: "System",
-      active: true,
-      order: 11,
-    },
-    {
       command: "portfolio",
       description: "Show portfolio summary",
       output:
-        "QA Engineer · 2+ years experience · Manual and automation testing expert",
+        "QA Engineer · {name} · Manual and automation testing expert",
       category: "Profile",
       active: true,
-      order: 12,
+      order: 1,
     },
     {
       command: "services",
@@ -295,9 +219,13 @@ async function seed() {
         "Manual testing, automation testing, API testing, regression testing, and bug reporting",
       category: "Services",
       active: true,
-      order: 13,
+      order: 2,
     },
   ]);
+
+  await SiteSettings.create({
+    sections: DEFAULT_SECTIONS,
+  });
 
   await Testimonial.insertMany([
     {
