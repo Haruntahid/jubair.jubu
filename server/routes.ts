@@ -12,7 +12,12 @@ export async function registerRoutes(app: Express): Promise<void> {
   // Public contact form
   app.post("/api/contact", async (req, res) => {
     try {
-      const { name, email, subject, message } = req.body;
+      const {
+        visitorName: name,
+        visitorEmail: email,
+        subject,
+        message,
+      } = req.body;
       if (!name || !email || !subject || !message)
         return res.status(400).json({ message: "All fields are required" });
       const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
