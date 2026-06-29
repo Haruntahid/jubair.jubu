@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { portfolioApi } from "@/lib/api";
 import { getProfileSocialLinks } from "@shared/social";
 import profileImage from "@assets/L_In_1757586366832.jpg";
+import Slider from "./Slider";
 
 export default function HeroSection() {
   const { data: profile, isLoading } = useQuery({
@@ -22,7 +23,7 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="pt-28 pb-20 px-4 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800">
+    <section className="pt-28 pb-20 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -156,6 +157,7 @@ export default function HeroSection() {
           </motion.div>
         </div>
       </div>
+      <Slider />
     </section>
   );
 }
