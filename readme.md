@@ -3,14 +3,14 @@
 
 A personal portfolio website showcasing projects, skills, and experience.
 
-## Tech Stack
+## Tech Stack - MERN
 
-- HTML
-- CSS
-- JavaScript
+- MongoDB
+- ExpressJS
 - React
+- NodeJS
 
-## Getting Started
+## Getting Started With Root Directory
 
 ```bash
 npm install
